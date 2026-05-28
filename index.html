@@ -189,7 +189,82 @@ console.log(
 
     </main>
 
-    <script src="script.js"></script>
+    <script>
+
+window.name = "SEI_DASHBOARD";
+
+console.log(
+    "Dashboard pronta"
+);
+
+window.addEventListener(
+    "message",
+    (event) => {
+
+        if (
+            !event.data ||
+            event.data.tipo !== "SEI_PROCESSOS"
+        ) {
+            return;
+        }
+
+        const lista =
+            event.data.dados || [];
+
+        console.log(
+            "Recebidos:",
+            lista.length
+        );
+
+        //////////////////////////////////////////////////////
+        // TOTAL
+        //////////////////////////////////////////////////////
+
+        const total =
+            document.getElementById(
+                "total-processos"
+            );
+
+        if (total) {
+
+            total.innerText =
+                lista.length;
+        }
+
+        //////////////////////////////////////////////////////
+        // TABELA
+        //////////////////////////////////////////////////////
+
+        const tbody =
+            document.getElementById(
+                "process-table-body"
+            );
+
+        if (!tbody) {
+            return;
+        }
+
+        tbody.innerHTML = "";
+
+        //////////////////////////////////////////////////////
+
+        lista.forEach(proc => {
+
+            const tr =
+                document.createElement("tr");
+
+            tr.innerHTML =
+                "<td>" + proc.numero + "</td>" +
+                "<td>" + proc.assunto + "</td>" +
+                "<td>" + proc.status + "</td>" +
+                "<td>" + proc.data + "</td>";
+
+            tbody.appendChild(tr);
+        });
+    }
+);
+
+</script>
 
 </body>
 </html>
