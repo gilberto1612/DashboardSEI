@@ -9,120 +9,27 @@
 
     <link rel="stylesheet" href="style.css" />
 </head>
-    <script>
 
-window.processosSEI = [];
-
-//////////////////////////////////////////////////////
-// STATUS
-//////////////////////////////////////////////////////
-
-function criarStatusTag(status) {
-
-    let classe = "status-ok";
-
-    if (
-        status.toLowerCase().includes("pendente")
-    ) {
-        classe = "status-pendente";
-    }
-
-    if (
-        status.toLowerCase().includes("urgente")
-    ) {
-        classe = "status-urgente";
-    }
-
-    return `
-        <span class="status-tag ${classe}">
-            ${status}
-        </span>
-    `;
-}
-
-//////////////////////////////////////////////////////
-// TABELA
-//////////////////////////////////////////////////////
-
-function renderTabela(lista) {
-
-    const tbody =
-        document.getElementById(
-            "process-table-body"
-        );
-
-    tbody.innerHTML = "";
-
-    lista.forEach(proc => {
-
-        const tr =
-            document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${proc.numero}</td>
-            <td>${proc.assunto}</td>
-            <td>${criarStatusTag(proc.status)}</td>
-            <td>${proc.data}</td>
-        `;
-
-        tbody.appendChild(tr);
-    });
-}
-
-//////////////////////////////////////////////////////
-// CARDS
-//////////////////////////////////////////////////////
-
-function atualizarCards(lista) {
-
-    document.getElementById(
-        "total-processos"
-    ).innerText = lista.length;
-
-    document.getElementById(
-        "novos-processos"
-    ).innerText =
-        lista.filter(
-            p => p.novo
-        ).length;
-
-    document.getElementById(
-        "pendentes-processos"
-    ).innerText =
-        lista.filter(
-            p =>
-                p.status
-                .toLowerCase()
-                .includes("pendente")
-        ).length;
-
-    document.getElementById(
-        "urgentes-processos"
-    ).innerText =
-        lista.filter(
-            p =>
-                p.status
-                .toLowerCase()
-                .includes("urgente")
-        ).length;
-}
-
-//////////////////////////////////////////////////////
-// RECEBER DO TAMPERMONKEY
-//////////////////////////////////////////////////////
+<script>
 
 window.addEventListener(
     "message",
     (event) => {
 
+        //////////////////////////////////////////////////////
+        // VERIFICA EVENTO
+        //////////////////////////////////////////////////////
+
         if (
-            !event.data
-            ||
-            event.data.tipo
-            !== "SEI_PROCESSOS"
+            !event.data ||
+            event.data.tipo !== "SEI_PROCESSOS"
         ) {
             return;
         }
+
+        //////////////////////////////////////////////////////
+        // DADOS RECEBIDOS
+        //////////////////////////////////////////////////////
 
         const lista =
             event.data.dados || [];
@@ -132,54 +39,79 @@ window.addEventListener(
             lista.length
         );
 
-        window.processosSEI = lista;
+        //////////////////////////////////////////////////////
+        // TOTAL DE PROCESSOS
+        //////////////////////////////////////////////////////
 
-        renderTabela(lista);
+        const total =
+            document.getElementById(
+                "total-processos"
+            );
 
-        atualizarCards(lista);
+        if (total) {
 
-        document.getElementById(
-            "status-text"
-        ).innerText =
-            "Atualizado: "
-            + new Date()
-            .toLocaleTimeString();
-    }
-);
+            total.innerText =
+                lista.length;
+        }
 
-//////////////////////////////////////////////////////
-// PESQUISA
-//////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////
+        // TABELA
+        //////////////////////////////////////////////////////
 
-const input =
-    document.getElementById(
-        "search-input"
-    );
+        const tbody =
+            document.getElementById(
+                "process-table-body"
+            );
 
-input.addEventListener(
-    "input",
-    () => {
+        if (!tbody) {
 
-        const termo =
-            input.value.toLowerCase();
+            console.log(
+                "Tabela não encontrada"
+            );
 
-        const filtrados =
-            window.processosSEI.filter(proc => {
+            return;
+        }
 
-                return (
-                    proc.numero
-                    .toLowerCase()
-                    .includes(termo)
+        //////////////////////////////////////////////////////
+        // LIMPA TABELA
+        //////////////////////////////////////////////////////
 
-                    ||
+        tbody.innerHTML = "";
 
-                    proc.assunto
-                    .toLowerCase()
-                    .includes(termo)
-                );
-            });
+        //////////////////////////////////////////////////////
+        // INSERE PROCESSOS
+        //////////////////////////////////////////////////////
 
-        renderTabela(filtrados);
+        lista.forEach(proc => {
+
+            const tr =
+                document.createElement("tr");
+
+            tr.innerHTML =
+                "<td>" + (proc.numero || "") + "</td>" +
+                "<td>" + (proc.assunto || "") + "</td>" +
+                "<td>" + (proc.status || "") + "</td>" +
+                "<td>" + (proc.data || "") + "</td>";
+
+            tbody.appendChild(tr);
+        });
+
+        //////////////////////////////////////////////////////
+        // STATUS
+        //////////////////////////////////////////////////////
+
+        const status =
+            document.getElementById(
+                "status-text"
+            );
+
+        if (status) {
+
+            status.innerText =
+                "Atualizado: "
+                + new Date()
+                .toLocaleTimeString();
+        }
     }
 );
 
@@ -188,6 +120,7 @@ console.log(
 );
 
 </script>
+
 <body>
 
     <header class="topbar">
