@@ -1,8 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Dashboard SEI</title>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
     <script>
 
 window.processosSEI = [];
+
+//////////////////////////////////////////////////////
+// STATUS
+//////////////////////////////////////////////////////
 
 function criarStatusTag(status) {
 
@@ -26,6 +39,10 @@ function criarStatusTag(status) {
         </span>
     `;
 }
+
+//////////////////////////////////////////////////////
+// TABELA
+//////////////////////////////////////////////////////
 
 function renderTabela(lista) {
 
@@ -51,6 +68,10 @@ function renderTabela(lista) {
         tbody.appendChild(tr);
     });
 }
+
+//////////////////////////////////////////////////////
+// CARDS
+//////////////////////////////////////////////////////
 
 function atualizarCards(lista) {
 
@@ -87,28 +108,44 @@ function atualizarCards(lista) {
 }
 
 //////////////////////////////////////////////////////
-// GLOBAL
+// RECEBER DO TAMPERMONKEY
 //////////////////////////////////////////////////////
 
-window.atualizarDashboard = function(lista) {
+window.addEventListener(
+    "message",
+    (event) => {
 
-    console.log(
-        "Atualizando dashboard:",
-        lista.length
-    );
+        if (
+            !event.data
+            ||
+            event.data.tipo
+            !== "SEI_PROCESSOS"
+        ) {
+            return;
+        }
 
-    window.processosSEI = lista;
+        const lista =
+            event.data.dados || [];
 
-    renderTabela(lista);
+        console.log(
+            "Recebidos:",
+            lista.length
+        );
 
-    atualizarCards(lista);
+        window.processosSEI = lista;
 
-    document.getElementById(
-        "status-text"
-    ).innerText =
-        "Atualizado: "
-        + new Date().toLocaleTimeString();
-};
+        renderTabela(lista);
+
+        atualizarCards(lista);
+
+        document.getElementById(
+            "status-text"
+        ).innerText =
+            "Atualizado: "
+            + new Date()
+            .toLocaleTimeString();
+    }
+);
 
 //////////////////////////////////////////////////////
 // PESQUISA
@@ -147,18 +184,10 @@ input.addEventListener(
 );
 
 console.log(
-    "Dashboard HTML carregada"
+    "Dashboard pronta"
 );
 
 </script>
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Dashboard SEI</title>
-
-    <link rel="stylesheet" href="style.css" />
-</head>
 <body>
 
     <header class="topbar">
