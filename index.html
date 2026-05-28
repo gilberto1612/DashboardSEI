@@ -10,29 +10,48 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 
+```html
 <script>
 
-window.addEventListener(
-    "message",
-    (event) => {
+//////////////////////////////////////////////////////
+// CANAL
+//////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////
-        // VERIFICA EVENTO
+const canal =
+    new BroadcastChannel(
+        "SEI_DASHBOARD"
+    );
+
+console.log(
+    "Dashboard pronta"
+);
+
+//////////////////////////////////////////////////////
+// RECEBER DADOS
+//////////////////////////////////////////////////////
+
+canal.onmessage =
+    function(event) {
+
+        const mensagem =
+            event.data;
+
         //////////////////////////////////////////////////////
 
         if (
-            !event.data ||
-            event.data.tipo !== "SEI_PROCESSOS"
+            !mensagem
+            ||
+            mensagem.tipo !== "SEI_PROCESSOS"
         ) {
             return;
         }
 
         //////////////////////////////////////////////////////
-        // DADOS RECEBIDOS
+        // LISTA
         //////////////////////////////////////////////////////
 
         const lista =
-            event.data.dados || [];
+            mensagem.dados || [];
 
         console.log(
             "Recebidos:",
@@ -40,7 +59,7 @@ window.addEventListener(
         );
 
         //////////////////////////////////////////////////////
-        // TOTAL DE PROCESSOS
+        // TOTAL
         //////////////////////////////////////////////////////
 
         const total =
@@ -64,22 +83,13 @@ window.addEventListener(
             );
 
         if (!tbody) {
-
-            console.log(
-                "Tabela não encontrada"
-            );
-
             return;
         }
 
         //////////////////////////////////////////////////////
-        // LIMPA TABELA
-        //////////////////////////////////////////////////////
 
         tbody.innerHTML = "";
 
-        //////////////////////////////////////////////////////
-        // INSERE PROCESSOS
         //////////////////////////////////////////////////////
 
         lista.forEach(proc => {
@@ -112,14 +122,11 @@ window.addEventListener(
                 + new Date()
                 .toLocaleTimeString();
         }
-    }
-);
-
-console.log(
-    "Dashboard pronta"
-);
+    };
 
 </script>
+```
+
 
 <body>
 
