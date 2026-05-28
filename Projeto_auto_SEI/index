@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Dashboard SEI</title>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <header class="topbar">
+        <h1>Dashboard SEI</h1>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            <span id="status-text">Aguardando dados...</span>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="cards">
+
+            <div class="card">
+                <h2>Total</h2>
+                <p id="total-processos">0</p>
+            </div>
+
+            <div class="card">
+                <h2>Novos</h2>
+                <p id="novos-processos">0</p>
+            </div>
+
+            <div class="card">
+                <h2>Pendentes</h2>
+                <p id="pendentes-processos">0</p>
+            </div>
+
+            <div class="card">
+                <h2>Urgentes</h2>
+                <p id="urgentes-processos">0</p>
+            </div>
+
+        </section>
+
+        <section class="table-section">
+
+            <div class="table-header">
+                <h2>Lista de Processos</h2>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Pesquisar processo..."
+                />
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Assunto</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+
+                <tbody id="process-table-body">
+
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
