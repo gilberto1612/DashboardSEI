@@ -82,7 +82,7 @@ function atualizarCards(lista) {
         ).length;
 }
 
-function atualizarDashboard(lista) {
+window.atualizarDashboard = function(lista) {
 
     window.processosSEI = lista;
 
